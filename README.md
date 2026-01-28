@@ -6,6 +6,8 @@ com paginação, cache em memória e interface responsiva.
 A aplicação não realiza reload de página.
 Toda atualização visual é realizada através da manipulação do DOM, onde o container de Pokémon é limpo e re-renderizado conforme o estado da aplicação muda (paginação ou busca).
 
+![Pokedex](assets/screenshot-home.png)
+
 ## Funcionalidades
 - Listagem paginada de Pokémon
 - Busca por nome
@@ -40,7 +42,9 @@ src/
 ```bash
 git clone https://github.com/Webertt-Coutinho/pokedex.git
 ```
-2. Abra o arquivo index.html no navegador ou utilize o Live Server
+2. Abra o projeto usando Live Server no VS Code: 
+Caso não tenha, instale a extensão Live Server do VS Code.
+Clique com o botão direito em index.html → Open with Live Server
 
 ## Decisões Técnicas
 
