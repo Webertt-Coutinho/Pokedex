@@ -41,7 +41,7 @@ export async function initTypeFilter() {
     if (!type) {
       state.mode = 'ALL';
       state.typeResults = [];
-      fetchPokemonPage(1);
+      await fetchPokemonPage(1);
       return;
     }
 
@@ -52,6 +52,6 @@ export async function initTypeFilter() {
 
     state.typeResults = data;
     state.totalItems = state.typeResults.length;
-    fetchPokemonPage(1);
+    await fetchPokemonPage(1);
   });
 }
