@@ -15,10 +15,13 @@ export const pageCache = {
   TYPE: {}
 }
 
-async function init() {
-  searchPokemon();
-  initTypeFilter()
-  await fetchPokemonPage(1);
-}
+document.addEventListener('DOMContentLoaded', () => {
+  async function init() {
+    searchPokemon();
+    initTypeFilter()
+    await fetchPokemonPage(1);
+  }
 
-init();
+  init();
+});
+

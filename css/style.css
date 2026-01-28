@@ -1,5 +1,6 @@
 @import url('./header.css');
 @import url('./search.css');
+@import url('./loading.css');
 @import url('./filter.css');
 @import url('./pokemon-container.css');
 @import url('./pagination.css');
