@@ -24,9 +24,19 @@
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 8px;
-  background-color: #F5F5F5;
   color: #000;
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.2s, color 0.2s;
+}
+
+.header-buttons .btn:hover {
+  background-color: #E0E0E0;
+  color: #333;             
+}
+
+.header-buttons .btn.active {
+  background-color: #E0E0E0; 
+  color: #333;
+  cursor: default;
 }

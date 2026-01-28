@@ -1,4 +1,7 @@
-import { renderPokemonSearch } from './ui.js';
+import { renderPokemonSearch } from './renderPokemon.js';
+import { fetchPokemonPage } from './pagination.js';
+
+export let isSearching = false;
 
 export function searchPokemon() {
   const searchInput = document.getElementById('searchInput');
@@ -6,6 +9,14 @@ export function searchPokemon() {
 
   const handleSearch = async () => {
     const name = searchInput.value.trim().toLowerCase();
+
+    if (!name) {
+      fetchPokemonPage(1);
+      isSearching = false;
+      return;
+    }
+
+    isSearching = true;
     renderPokemonSearch(name);
   };
 

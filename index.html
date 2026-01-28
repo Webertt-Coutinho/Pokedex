@@ -9,26 +9,36 @@
 <body>
 
   <header class="header">
-    <img src="assets/home.png" alt="Logo" class="header-logo">
+    <a href="#" class="header-logo-link">
+      <img src="assets/home.png" alt="Logo" class="header-logo">
+    </a>
     <div class="header-buttons">
-      <button class="btn">Home</button>
-      <button class="btn">Pokédex</button>
+      <a href="#" class="btn active" >Home</a>
+      <a href="#" class="btn">Pokédex</a>
     </div>
   </header>
 
   <div class="search-container">
-    <input type="text" id="searchInput" placeholder="Faça uma busca pelo nome do pokémon" class="search-input">
+    <input type="text" id="searchInput" autocomplete="off" placeholder="Faça uma busca pelo nome do pokémon" class="search-input">
     <button id="search-button" class="search-button">
       <img src="assets/search.svg" alt="Buscar">
     </button>
   </div>
 
+  <div id="loader" class="loader" style="display: none;"></div>
   <div id="pokemon-container" class="pokemon-container"></div>
 
   <div id="pagination" class="pagination">
-    <button id="prev-btn" type="button">Anterior</button>
+    <button id="prev-btn" type="button">
+      <img src="./assets/prev.svg" alt="Anterior" width="16" height="16">
+      Anterior
+    </button>
     <div id="page-numbers"></div>
-    <button id="next-btn" type="button">Próximo</button>
+    <button id="next-btn" type="button">
+      Próximo
+      <img src="./assets/next.svg" alt="Próximo" width="16" height="16">
+    </button>
+    <button id="reset-search" style="display: none;">Voltar para lista completa</button>
   </div>
   
 

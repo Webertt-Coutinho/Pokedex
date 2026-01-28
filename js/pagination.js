@@ -1,15 +1,25 @@
 import { fetchPokemonList } from './api.js';
-import { renderPokemonList } from './ui.js';
+import { renderPokemonList } from './renderPokemon.js';
+import { isSearching  } from './search.js';
 
 const itemsPerPage = 18;
 let currentPage = 1;
 let totalItems = 0;
 let prevBtn, nextBtn, pageNumbersContainer;
+const pageCache = {}
 
 export async function fetchPokemonPage(page = 1) {
   const container = document.getElementById('pokemon-container');
-  const pagination = document.getElementById('pagination-container');
+  const pagination = document.getElementById('pagination');
   container.innerHTML = ''; 
+
+  if (pageCache[page]) {
+    await renderPokemonList(pageCache[page]);
+    if (pagination) pagination.style.display = 'flex';
+    currentPage = page;
+    renderPagination();
+    return;
+  }
 
   try {
     const offset = (page - 1) * itemsPerPage;
@@ -22,6 +32,7 @@ export async function fetchPokemonPage(page = 1) {
       return;
     }
 
+    pageCache[page] = data.results;
     await renderPokemonList(data.results);
 
     if (pagination) pagination.style.display = 'flex';
@@ -35,6 +46,7 @@ export async function fetchPokemonPage(page = 1) {
 }
 
 function renderPagination() {
+  
   if (!prevBtn || !nextBtn || !pageNumbersContainer) return;
 
   const totalPages = Math.ceil(totalItems / itemsPerPage);

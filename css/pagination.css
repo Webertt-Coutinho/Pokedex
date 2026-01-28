@@ -10,7 +10,7 @@
 .pagination button {
   background: #FFF;
   border: none;
-  padding: 0.5rem 0.8rem;
+  padding: 0.5rem 0.3rem;
   border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
@@ -43,3 +43,9 @@
   display: flex;
   gap: 1rem; 
 }
+
+.pagination button img {
+  margin: 0.2rem 0.2rem; 
+  vertical-align: middle;
+}
+
