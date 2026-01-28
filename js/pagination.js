@@ -7,15 +7,36 @@ let totalItems = 0;
 let prevBtn, nextBtn, pageNumbersContainer;
 
 export async function fetchPokemonPage(page = 1) {
-  const offset = (page - 1) * itemsPerPage;
-  const data = await fetchPokemonList(itemsPerPage, offset);
-  totalItems = data.count;
+  const container = document.getElementById('pokemon-container');
+  const pagination = document.getElementById('pagination-container');
+  container.innerHTML = ''; 
 
-  await renderPokemonList(data.results);
-  renderPagination();
+  try {
+    const offset = (page - 1) * itemsPerPage;
+    const data = await fetchPokemonList(itemsPerPage, offset);
+    totalItems = data.count;
+    
+    if (!data || !data.results?.length) {
+      container.innerHTML = '<p>Não há Pokémon para mostrar.</p>';
+      if (pagination) pagination.style.display = 'none';
+      return;
+    }
+
+    await renderPokemonList(data.results);
+
+    if (pagination) pagination.style.display = 'flex';
+    renderPagination();
+
+  } catch (error) {
+    console.error('Erro ao carregar Pokémon:', error);
+    container.innerHTML = '<p>Erro ao carregar os Pokémon. Tente novamente.</p>';
+    if (pagination) pagination.style.display = 'none';
+  }
 }
 
 function renderPagination() {
+  if (!prevBtn || !nextBtn || !pageNumbersContainer) return;
+
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   
   prevBtn.disabled = currentPage === 1;
