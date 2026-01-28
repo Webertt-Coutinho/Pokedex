@@ -28,6 +28,10 @@ export async function initTypeFilter() {
 
   select.addEventListener('change', async () => {
     const searchInput = document.getElementById('searchInput');
+    const allBtnContainer = document.getElementById('all-btn-container');
+    console.log(allBtnContainer)
+    if (allBtnContainer) allBtnContainer.style.display = 'none';
+
     if (searchInput) searchInput.value = '';
 
     const type = select.value;

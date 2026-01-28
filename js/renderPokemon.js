@@ -4,23 +4,28 @@ import {typeColors} from './typeColors.js'
 export async function renderPokemonList(list) {
   const container = document.getElementById('pokemon-container');
   if (!container) return;
-  container.innerHTML = '';
 
   const promises = list.map(p => fetchPokemonInfo(p.name));
   const results = await Promise.all(promises);
-  results.forEach(async (data) => {
+
+  const fragment = document.createDocumentFragment();
+
+  results.forEach((data) => {
     if (data) {
-      const card = await createPokemonCard(data);
-      container.appendChild(card);
+      const card = createPokemonCard(data); 
+      fragment.appendChild(card);
     }
   });
+
+  container.innerHTML = ''; 
+  container.appendChild(fragment); 
 }
 
-async function createPokemonCard(data) {
+function createPokemonCard(data) {
   const card = document.createElement('div');
   card.className = 'pokemon-card';
 
-  const sprite = data.sprites.other.dream_world.front_default;
+  const sprite = data.sprites.other.dream_world.front_default || data.sprites.front_default;
   const type = data.types[0].type.name;
   const id = data.id;
 
@@ -30,18 +35,20 @@ async function createPokemonCard(data) {
       <span class="pokemon-number">#${id}</span>
     </div>
     <div class="pokemon-body">
-      <img src="${sprite}" alt="${data.name}" class="pokemon-image" />
+      <img src="${sprite}" alt="${data.name}" class="pokemon-image" loading="lazy" />
       <div class="pokemon-name">${data.name}</div>
     </div>
   `;
 
   return card;
 }
-
 export async function renderPokemonSearch(name) {
   const container = document.getElementById('pokemon-container');
   const pagination = document.getElementById('pagination');
   container.innerHTML = '';
+  const loading = document.getElementById('loading');
+  if (loading) loading.style.display = 'flex';
+
 
   try {
     const data = await fetchPokemonInfo(name.toLowerCase());
@@ -54,5 +61,7 @@ export async function renderPokemonSearch(name) {
   } catch (err) {
     container.innerHTML = '<p>Pokémon não encontrado!</p>';
     if (pagination) pagination.style.display = 'none';
+  } finally {
+    if (loading) loading.style.display = 'none';
   }
 }
