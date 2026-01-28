@@ -65,6 +65,3 @@ dos botões.
 
 ## Melhorias Futuras
 - Internacionalização (pt-BR)
-- Skeleton loader durante carregamento
-- Pesquisa por filtros, por exemplo Tipo (Grama, Eletrico)
-- Pesquisa com filtros (ex: tipo — Grama, Elétrico)
