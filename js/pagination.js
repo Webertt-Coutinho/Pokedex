@@ -1,21 +1,53 @@
 import { fetchPokemonList } from './api.js';
-import { renderPokemonList } from './ui.js';
+import { renderPokemonList } from './renderPokemon.js';
 
 const itemsPerPage = 18;
 let currentPage = 1;
 let totalItems = 0;
 let prevBtn, nextBtn, pageNumbersContainer;
+const pageCache = {}
 
 export async function fetchPokemonPage(page = 1) {
-  const offset = (page - 1) * itemsPerPage;
-  const data = await fetchPokemonList(itemsPerPage, offset);
-  totalItems = data.count;
+  const container = document.getElementById('pokemon-container');
+  const pagination = document.getElementById('pagination');
+  container.innerHTML = ''; 
 
-  await renderPokemonList(data.results);
-  renderPagination();
+  if (pageCache[page]) {
+    await renderPokemonList(pageCache[page]);
+    if (pagination) pagination.style.display = 'flex';
+    currentPage = page;
+    renderPagination();
+    return;
+  }
+
+  try {
+    const offset = (page - 1) * itemsPerPage;
+    const data = await fetchPokemonList(itemsPerPage, offset);
+    totalItems = data.count;
+    
+    if (!data || !data.results?.length) {
+      container.innerHTML = '<p>Não há Pokémon para mostrar.</p>';
+      if (pagination) pagination.style.display = 'none';
+      return;
+    }
+
+    pageCache[page] = data.results;
+    await renderPokemonList(data.results);
+
+    if (pagination) pagination.style.display = 'flex';
+    renderPagination();
+
+  } catch (error) {
+    console.error('Erro ao carregar Pokémon:', error);
+    container.innerHTML = '<p>Erro ao carregar os Pokémon. Tente novamente.</p>';
+    if (pagination) pagination.style.display = 'none';
+  }
 }
 
 function renderPagination() {
+  
+  if (!prevBtn || !nextBtn || !pageNumbersContainer) return;
+
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   
   prevBtn.disabled = currentPage === 1;

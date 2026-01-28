@@ -2,10 +2,16 @@
 @import url('./search.css');
 @import url('./pokemon-container.css');
 @import url('./pagination.css');
+@import url('./loader.css');
 
 body {
   font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
   background-color: #FFF;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
 }
