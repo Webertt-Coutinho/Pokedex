@@ -8,6 +8,9 @@ export function searchPokemon() {
   const allBtn = document.getElementById('all-btn');
 
   const handleSearch = async () => {
+    const typeSelect = document.getElementById('typeFilter');
+    if (typeSelect) typeSelect.value = '';
+
     const name = searchInput.value.trim().toLowerCase();
 
     if (!name) {
@@ -29,4 +32,5 @@ export function searchPokemon() {
     searchInput.value = '';
     fetchPokemonPage(1); 
   });
+  
 }
