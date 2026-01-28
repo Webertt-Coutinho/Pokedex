@@ -1,6 +1,5 @@
 import { fetchPokemonList } from './api.js';
 import { renderPokemonList } from './renderPokemon.js';
-import { isSearching  } from './search.js';
 
 const itemsPerPage = 18;
 let currentPage = 1;

@@ -49,3 +49,25 @@
   vertical-align: middle;
 }
 
+.all-btn-container {
+  display: none;
+  text-align: center;
+  margin: 20px 0;
+}
+
+#all-btn {
+  background-color: #ffcb05;
+  color: #2a75bb; 
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#all-btn:hover {
+  background-color: #f5b700;
+  transform: scale(1.05);
+}
