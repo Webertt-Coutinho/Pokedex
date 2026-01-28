@@ -20,3 +20,28 @@ export async function fetchPokemonInfo(name) {
     return null; 
   }
 }
+
+export async function fetchPokemonTypes() {
+  try {
+    const response = await fetch(`https://pokeapi.co/api/v2/type`);
+    if (!response.ok) throw new Error('Tipo não encontrado');
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return null; 
+  }
+}
+
+export async function fetchTypeByName(typeName) {
+  try {
+    const response = await fetch(`https://pokeapi.co/api/v2/type/${typeName}`);
+    if (!response.ok) throw new Error('Tipo não encontrado');
+
+    const data = await response.json();
+
+    return data.pokemon.map(p => p.pokemon);
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}

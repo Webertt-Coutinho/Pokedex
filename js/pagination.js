@@ -1,61 +1,79 @@
 import { fetchPokemonList } from './api.js';
 import { renderPokemonList } from './renderPokemon.js';
+import { state, pageCache } from './main.js';
 
-const itemsPerPage = 18;
-let currentPage = 1;
-let totalItems = 0;
 let prevBtn, nextBtn, pageNumbersContainer;
-const pageCache = {}
 
 export async function fetchPokemonPage(page = 1) {
   const container = document.getElementById('pokemon-container');
   const pagination = document.getElementById('pagination');
-  container.innerHTML = ''; 
+  container.innerHTML = '';
 
-  if (pageCache[page]) {
-    await renderPokemonList(pageCache[page]);
-    if (pagination) pagination.style.display = 'flex';
-    currentPage = page;
-    renderPagination();
-    return;
+  function showPagination(show) {
+    if (pagination) pagination.style.display = show ? 'flex' : 'none';
   }
 
-  try {
-    const offset = (page - 1) * itemsPerPage;
-    const data = await fetchPokemonList(itemsPerPage, offset);
-    totalItems = data.count;
-    
-    if (!data || !data.results?.length) {
+  async function renderResults(results) {
+    if (!results || results.length === 0) {
       container.innerHTML = '<p>Não há Pokémon para mostrar.</p>';
-      if (pagination) pagination.style.display = 'none';
-      return;
+      showPagination(false);
+      return false;
     }
-
-    pageCache[page] = data.results;
-    await renderPokemonList(data.results);
-
-    if (pagination) pagination.style.display = 'flex';
+    await renderPokemonList(results);
+    showPagination(true);
+    state.currentPage = page;
     renderPagination();
+    return true;
+  }
 
+  function getPageFromCache(mode) {
+    return pageCache[mode][page];
+  }
+
+  if (state.mode === 'TYPE') {
+    const allTypePokemons = state.typeResults;
+    state.totalItems = allTypePokemons.length;
+
+    const cached = getPageFromCache('TYPE');
+    if (cached) return await renderResults(cached);
+
+    const start = (page - 1) * state.itemsPerPage;
+    const end = start + state.itemsPerPage;
+    const pagedResults = allTypePokemons.slice(start, end);
+
+    pageCache.TYPE[page] = pagedResults;
+    return await renderResults(pagedResults);
+  }
+
+  const cachedAll = getPageFromCache('ALL');
+  if (cachedAll) return await renderResults(cachedAll);
+
+  try {
+    const offset = (page - 1) * state.itemsPerPage;
+    const data = await fetchPokemonList(state.itemsPerPage, offset);
+    state.totalItems = data.count;
+
+    pageCache.ALL[page] = data.results || [];
+    await renderResults(data.results || []);
   } catch (error) {
     console.error('Erro ao carregar Pokémon:', error);
     container.innerHTML = '<p>Erro ao carregar os Pokémon. Tente novamente.</p>';
-    if (pagination) pagination.style.display = 'none';
+    showPagination(false);
   }
 }
 
+
 function renderPagination() {
-  
   if (!prevBtn || !nextBtn || !pageNumbersContainer) return;
 
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalPages = Math.ceil(state.totalItems / state.itemsPerPage);
   
-  prevBtn.disabled = currentPage === 1;
-  nextBtn.disabled = currentPage === totalPages;
+  prevBtn.disabled = state.currentPage === 1;
+  nextBtn.disabled = state.currentPage === totalPages;
   pageNumbersContainer.innerHTML = '';
 
   const maxPagesToShow = 3;
-  let startPage = Math.max(1, currentPage - 1);
+  let startPage = Math.max(1, state.currentPage - 1);
   let endPage = startPage + maxPagesToShow - 1;
 
   if (endPage > totalPages) {
@@ -66,18 +84,18 @@ function renderPagination() {
   for (let i = startPage; i <= endPage; i++) {
     const btn = document.createElement('button');
     btn.textContent = i;
-    if (i === currentPage) btn.classList.add('active');
+    if (i === state.currentPage) btn.classList.add('active');
 
     btn.addEventListener('click', () => {
-      currentPage = i;
-      fetchPokemonPage(currentPage);
+      state.currentPage = i;
+      fetchPokemonPage(state.currentPage);
     });
 
     pageNumbersContainer.appendChild(btn);
   }
 
-  prevBtn.disabled = currentPage === 1;
-  nextBtn.disabled = currentPage === totalPages;
+  prevBtn.disabled = state.currentPage === 1;
+  nextBtn.disabled = state.currentPage === totalPages;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -87,18 +105,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   prevBtn.addEventListener('click', (e) => {
     e.preventDefault();
-    if (currentPage > 1) {
-      currentPage--;
-      fetchPokemonPage(currentPage);
+    if (state.currentPage > 1) {
+      state.currentPage--;
+      fetchPokemonPage(state.currentPage);
     }
   });
 
   nextBtn.addEventListener('click', (e) => {
     e.preventDefault();
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
-    if (currentPage < totalPages) {
-      currentPage++;
-      fetchPokemonPage(currentPage);
+    const totalPages = Math.ceil(state.totalItems / state.itemsPerPage);
+    if (state.currentPage < totalPages) {
+      state.currentPage++;
+      fetchPokemonPage(state.currentPage);
     }
   });
 
