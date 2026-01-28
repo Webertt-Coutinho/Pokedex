@@ -73,3 +73,16 @@
   flex: 0 0 200px;
   position: relative;
 }
+
+@media (max-width: 1400px) {
+  .search-filter-wrapper {
+    padding: 0 3rem; 
+  }
+}
+
+/* Para telas pequenas */
+@media (max-width: 768px) {
+  .search-filter-wrapper {
+    padding: 0 1rem;
+  }
+}
